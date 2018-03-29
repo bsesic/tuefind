@@ -151,18 +151,10 @@
         </tr>
       <? endif; ?>
 
-      <tr>
-        <th><?=$this->transEsc('Check Availability')?>: </th>
-          <? $isbns = $this->driver->getISBNs(); if (!empty($isbns)): ?>
-            <td><a href="http://openurlgw.hbz-nrw.de/gw?isbn=<?=$isbns[0]?>">HBZ Gateway</a></td>
-          <? else: ?>
-            <td><a href="http://openurlgw.hbz-nrw.de/gw?title=<?=urlencode($this->driver->getTitle())?>">HBZ Gateway</a></td>
-          <? endif; ?>
-      </tr>
-
+      <?=$this->render('RecordDriver/SolrDefault/HBZ.phtml'); ?>
       <?=$this->render('RecordDriver/SolrDefault/JOP.phtml'); ?>
-
       <?=$this->render('RecordDriver/SolrDefault/PDA.phtml'); ?>
+
       <?
         $subito_url = $this->driver->getSubitoURL('IXTHEO');
         if (!empty($subito_url)):
@@ -306,18 +298,18 @@
         <td>
           <? foreach ($subjects as $current):?>
               <? // Offer a browse button that allows to jump to browse mode ?>
-              <? $parts = explode('/', $current); ?>
-                <? $query = '"'. implode('" "', $parts).'"'; ?>
-                <a href="<?=$this->url('keywordchainsearch-results')?>?lookfor=<?=urlencode($query)?>" title="<?=$this->transEsc('Browse Keywordchains')?>"><span class="iconlabel label label-info">B</span></a>
-                <? // Make single keywords clickable ?>
-                <? if (count($parts) > 0):?>
-                  <? $i=0 ?>
-                  <? foreach ($parts as $part):?>
-                    <a href="<?= $this->record($this->driver)->getLink('subject', $part)?>"><?= $this->escapeHtml($part) ?></a>
-                  <?= $i++ < count($parts) - 1 ? ' / ' : '' ?>
-                  <? endforeach; ?>
-               <? endif; ?>
-              </br>
+              <? $parts = preg_split("~(?<!\\\)/~", $current); ?>
+              <? $query = '"'. implode('" "', $parts).'"'; ?>
+              <a href="<?=$this->url('keywordchainsearch-results')?>?lookfor=<?=urlencode($query)?>" title="<?=$this->transEsc('Browse Keywordchains')?>"><span class="iconlabel label label-info">B</span></a>
+              <? // Make single keywords clickable ?>
+              <? if (count($parts) > 0):?>
+                <? $i=0 ?>
+                <? foreach ($parts as $part):?>
+                <a href="<?= $this->record($this->driver)->getLink('subject', $part)?>"><?= $this->escapeHtml(str_replace("\\/", "/", $part)) ?></a>
+                <?= $i++ < count($parts) - 1 ? ' / ' : '' ?>
+                <? endforeach; ?>
+             <? endif; ?>
+             </br>
           <? endforeach; ?>
         </td>
       </tr>

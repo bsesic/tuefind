@@ -42,8 +42,9 @@
      $cover = $this->record($this->driver)->getCover('core', 'medium', $this->record($this->driver)->getThumbnail('large'));
      $preview = $this->record($this->driver)->getPreviews(); ?>
   <div class="col-sm-12">
-
-    <h3 property="name"><?=$this->escapeHtml($this->driver->getShortTitle() . ' ' . $this->driver->getSubtitle() . ' ' . $this->driver->getTitleSection())?></h3>
+    <h3 property="name">
+      <?=$this->driver->getTitle();?>
+    </h3>
 
     <? $summary = $this->driver->getSummary(); $summary = isset($summary[0]) ? $this->escapeHtml($summary[0]) : false; ?>
     <? if ($summary): ?>
@@ -214,6 +215,7 @@
       <?=$this->render('RecordDriver/SolrDefault/JOP.phtml'); ?>
       <?=$this->render('RecordDriver/SolrDefault/Availability.phtml'); ?>
       <?=$this->render('RecordDriver/SolrDefault/HBZ.phtml'); ?>
+      <?=$this->render('RecordDriver/SolrDefault/PDA.phtml'); ?>
 
       <? $issn = $this->driver->getCleanISSN(); $isbn = $this->driver->getCleanISBN();
       if (!empty($issn) || !empty($isbn)):
